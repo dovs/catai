@@ -3,6 +3,13 @@ import { $, fs } from 'zx';
 import { DOWNLOAD_LOCATION } from '../src/model-settings.js';
 import ModelURL from './utils/model-url.js';
 import { downloadFileCLI } from './utils/download/cli-download.js';
+import proxy from "node-global-proxy";
+
+proxy.default.setConfig({
+  http: process.env.http_proxy,
+  https: process.env.https_proxy,
+});
+proxy.default.start();
 
 const modelURL = new ModelURL();
 await modelURL.updateLink();
@@ -31,6 +38,8 @@ try {
         await completeDownloadSettings();
     }
 }
+
+proxy.stop();
 
 async function completeDownloadSettings(){
     console.log("Download complete");
